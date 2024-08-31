@@ -1,15 +1,15 @@
 CREATE TABLE "account" (
   "id" bigserial PRIMARY KEY,
   "account_name" varchar NOT NULL,
-  "balance" bigint,
-  "currency" varchar,
+  "balance" bigint NOT NULL,
+  "currency" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "transfers" (
   "id" bigserial PRIMARY KEY,
-  "sender_id" bigint,
-  "receiver_id" bigint,
+  "sender_id" bigint NOT NULL,
+  "receiver_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
   "currency" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
@@ -17,7 +17,7 @@ CREATE TABLE "transfers" (
 
 CREATE TABLE "entries" (
   "id" bigserial PRIMARY KEY,
-  "account_id" bigint,
+  "account_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );

@@ -1,4 +1,4 @@
--- name: CreateTableAccount :exec
+-- name: CreateAccount :one
 INSERT INTO account (
   account_name, balance, currency
 ) VALUES (

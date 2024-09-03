@@ -3,7 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
-	"log"
+	"fmt"
 )
 
 type Store struct {
@@ -25,8 +25,9 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 	err = fn(q)
 	if err != nil {
 		if rbErr := tx.Rollback(); rbErr != nil {
-			log.Fatal("tx error %v, rollback error %v", err, rbErr)
+			return fmt.Errorf("tx error: %v, rollback error: %v", err, rbErr)
 		}
+		return err
 	}
 
 	return tx.Commit()
@@ -78,6 +79,33 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxInput) (Transf
 		if err != nil {
 			return err
 		}
+
+		result.SenderAccount, err = q.GetAccountForUpdate(ctx, result.Transfer.SenderID)
+		if err != nil {
+			return err
+		}
+
+		result.SenderAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: -arg.Amount,
+			ID: arg.SenderID,
+		})
+		if err != nil {
+			return err
+		}
+
+		result.ReceiverAccount, err = q.GetAccountForUpdate(ctx, result.Transfer.ReceiverID)
+		if err != nil {
+			return err
+		}
+
+		result.ReceiverAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			Amount: arg.Amount,
+			ID: arg.ReceiverID,
+		})
+		if err != nil {
+			return err
+		}
+
 
 
 		return nil

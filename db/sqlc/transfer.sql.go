@@ -15,7 +15,7 @@ INSERT INTO transfers (
 ) VALUES (
   $1, $2, $3
 )
-RETURNING id, sender_id, receiver_id, amount, currency, created_at
+RETURNING id, sender_id, receiver_id, amount, created_at
 `
 
 type CreateTransferParams struct {
@@ -32,14 +32,13 @@ func (q *Queries) CreateTransfer(ctx context.Context, arg CreateTransferParams) 
 		&i.SenderID,
 		&i.ReceiverID,
 		&i.Amount,
-		&i.Currency,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const getTransfer = `-- name: GetTransfer :one
-SELECT id, sender_id, receiver_id, amount, currency, created_at FROM transfers
+SELECT id, sender_id, receiver_id, amount, created_at FROM transfers
 WHERE id = $1 LIMIT 1
 `
 
@@ -51,14 +50,13 @@ func (q *Queries) GetTransfer(ctx context.Context, id int64) (Transfer, error) {
 		&i.SenderID,
 		&i.ReceiverID,
 		&i.Amount,
-		&i.Currency,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const listTransfer = `-- name: ListTransfer :many
-SELECT id, sender_id, receiver_id, amount, currency, created_at FROM transfers
+SELECT id, sender_id, receiver_id, amount, created_at FROM transfers
 WHERE 
     sender_id = $1 OR
     receiver_id = $2
@@ -93,7 +91,6 @@ func (q *Queries) ListTransfer(ctx context.Context, arg ListTransferParams) ([]T
 			&i.SenderID,
 			&i.ReceiverID,
 			&i.Amount,
-			&i.Currency,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err

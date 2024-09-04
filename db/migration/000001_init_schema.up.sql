@@ -11,7 +11,6 @@ CREATE TABLE "transfers" (
   "sender_id" bigint NOT NULL,
   "receiver_id" bigint NOT NULL,
   "amount" bigint NOT NULL,
-  "currency" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 

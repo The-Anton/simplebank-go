@@ -28,6 +28,5 @@ type Transfer struct {
 	SenderID   int64     `json:"sender_id"`
 	ReceiverID int64     `json:"receiver_id"`
 	Amount     int64     `json:"amount"`
-	Currency   string    `json:"currency"`
 	CreatedAt  time.Time `json:"created_at"`
 }

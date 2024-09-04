@@ -15,8 +15,7 @@ const (
 )
 
 var testQueries *Queries
-
-var testStore Store
+var testDB *sql.DB
 
 func TestMain(m *testing.M) {
 	conn, err := sql.Open(dbDriver, dbSource)
